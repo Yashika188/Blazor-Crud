@@ -1,0 +1,57 @@
+﻿@page "/Operations"
+@using CrudAssignment.Data
+@inject OperationService operationService
+
+<NavLink class="nav-link" href="AddOperation">
+    <span aria-hidden="true">Add New</span>
+
+</NavLink>
+
+<h1>Operations Info</h1>
+@if (OpObj is null)
+{
+    <p><em>Loading... !</em></p>
+}
+else
+{
+    <table class="table">
+            <thead>
+                <tr>
+                    <th>Operation Id</th>
+                    <th>Operation Name</th>
+                    <th>Order</th>
+                    <th>Device</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+        <tbody>
+            @foreach(var op in OpObj)
+                {
+            <tr>
+                <td>@op.OperationID</td>
+                <td>@op.Name</td>
+                <td>@op.OrderInWhichToPerform</td>
+                <td>@op.Device</td>
+                <td>
+                    <a class="nav-link" href="EditOperation/@op.OperationID">
+                        <span aria-hidden="true">Edit</span>
+                    </a>
+                    <a class="nav-link" href="Delete/@op.OperationID">
+                        <span aria-hidden="true">Delete</span>
+                    </a>
+                </td>
+            </tr>
+                }
+        </tbody>
+    </table>
+}
+
+
+@code {
+
+    List<Operation> OpObj;
+    protected override async Task OnInitializedAsync()
+    {
+        OpObj = await Task.Run(() => operationService.GetAllOperationsAsync());
+    }
+}

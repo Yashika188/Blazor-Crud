@@ -1,0 +1,58 @@
+﻿@page "/Delete/{Id}"
+@using CrudAssignment.Data
+@inject OperationService operationService
+@inject NavigationManager NavigationManager
+
+<h2>Delete Operation</h2>
+<hr />
+<h3>Are you sure want to delete this?</h3>
+<form>
+    <div class="row">
+        <div class=" col-md-8">
+            <div class="form-group">
+                <label>Operation Id:</label>
+                <label>@obj.OperationID</label>
+            </div>
+            <div class="form-group">
+                <label>Operation Name:</label>
+                <label>@obj.Name</label>
+            </div>
+            <div class="form-group">
+                <label>Order:</label>
+                <label>@obj.OrderInWhichToPerform</label>
+            </div>
+            <div class="form-group">
+                <label>Device:</label>
+                <label>@obj.Device</label>
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <input type="button" class="btn btn-danger" @onclick="@DeleteOperations" value="Delete" />
+                <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancel" />
+            </div>
+        </div>
+    </div>
+</form>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    Operation obj = new Operation();
+    protected override async Task OnInitializedAsync()
+    {
+        obj = await Task.Run(() => operationService.GetOperationAsync(Convert.ToInt32(Id)));
+    }
+    protected async void DeleteOperations()
+    {
+        await operationService.DeleteOperationAsync(obj);
+        NavigationManager.NavigateTo("Operations");
+    }
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("Operations");
+    }
+}
